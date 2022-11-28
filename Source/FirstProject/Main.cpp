@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AMain::AMain()
@@ -57,6 +58,21 @@ AMain::AMain()
 
 	StaminaDrainRate = 25.f;
 	MinSprintStamina = 50.f;
+}
+
+/** TArray(동전을 주운 장소)의 값을 드로우디버그로 표현 */
+void AMain::ShowPickupLocations()
+{
+	/*for (int32 i = 0; i < PickupLocations.Num(); i++)
+	{
+		UKismetSystemLibrary::DrawDebugSphere(this, PickupLocations[i], 25.f, 8, FLinearColor::Green, 10.f, 0.5f);
+	}*/
+
+	for (auto Location : PickupLocations)
+	{
+		/** 드로우 디버그 */
+		UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Green, 10.f, 0.5f);
+	}
 }
 
 void AMain::SetMovementStatus(EMovementStatus status)
