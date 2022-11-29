@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Weapon.h"
 
 // Sets default values
 AMain::AMain()
@@ -58,6 +59,8 @@ AMain::AMain()
 
 	StaminaDrainRate = 25.f;
 	MinSprintStamina = 50.f;
+
+	bLMBDown = false;
 }
 
 /** TArray(동전을 주운 장소)의 값을 드로우디버그로 표현 */
@@ -218,6 +221,9 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AMain::ShiftKeyDown);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AMain::ShiftKeyUp);
 
+	PlayerInputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &AMain::LMBDown);
+	PlayerInputComponent->BindAction("LMB", EInputEvent::IE_Released, this, &AMain::LMBUp);
+
 }
 
 void AMain::MoveForward(float value)
@@ -253,6 +259,25 @@ void AMain::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * baseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
+void AMain::LMBDown()
+{
+	bLMBDown = true;
+	if (ActiveOverlappingItem)
+	{
+		AWeapon* Weapon = Cast<AWeapon>(ActiveOverlappingItem);
+		if (Weapon)
+		{
+			Weapon->Equip(this);
+			SetActiveOverlappingItem(nullptr);
+		}
+	}
+}
+
+void AMain::LMBUp()
+{
+	bLMBDown = false;
+}
+
 void AMain::DecrementHealth(float Amount)
 {
 	if (Health - Amount < 0.f)
@@ -274,5 +299,14 @@ void AMain::Die()
 void AMain::IncreamentCoin(float Amount)
 {
 	Coins += Amount;
+}
+
+void AMain::SetEquippedWeapon(AWeapon* WeaponToSet)
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Destroy();
+	}
+	EquippedWeapon = WeaponToSet;
 }
 
