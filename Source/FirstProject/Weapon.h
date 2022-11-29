@@ -30,10 +30,10 @@ public:
 	FORCEINLINE void SetWeaponState(EWeaponState state) { WeaponState = state; }
 	FORCEINLINE EWeaponState GetWeaponState() { return WeaponState; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Itme | Particles")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Particles")
 	bool bWeaponParticles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Itme | Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound")
 	class USoundCue* OnEquipSound;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SkeletalMesh")
