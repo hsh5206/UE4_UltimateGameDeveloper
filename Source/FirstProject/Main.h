@@ -114,4 +114,9 @@ public:
 	void DecrementHealth(float Amount);
 	void Die();
 	void IncreamentCoin(float Amount);
+
+	/** Equipped Weapon */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
+	class AWeapon* EquippedWeapon;
+	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
 };
