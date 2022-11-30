@@ -228,7 +228,7 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMain::MoveForward(float value)
 {
-	if ((Controller != nullptr) && (value != 0.0f))
+	if ((Controller != nullptr) && (value != 0.0f) && (!bAttacking))
 	{
 		// find out which way is Forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -241,12 +241,15 @@ void AMain::MoveForward(float value)
 
 void AMain::MoveRight(float value)
 {
-	// find out which way is Right
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+	if ((Controller != nullptr) && (value != 0.0f) && (!bAttacking))
+	{
+		// find out which way is Right
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
-	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	AddMovementInput(Direction, value);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, value);
+	}
 }
 
 void AMain::TurnAtRate(float Rate)
@@ -270,6 +273,10 @@ void AMain::LMBDown()
 			Weapon->Equip(this);
 			SetActiveOverlappingItem(nullptr);
 		}
+	}
+	else if(EquippedWeapon)
+	{
+		Attack();
 	}
 }
 
@@ -308,5 +315,41 @@ void AMain::SetEquippedWeapon(AWeapon* WeaponToSet)
 		EquippedWeapon->Destroy();
 	}
 	EquippedWeapon = WeaponToSet;
+}
+
+void AMain::Attack()
+{
+	if (!bAttacking)
+	{
+		bAttacking = true;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance && CombatMontage)
+		{
+			int32 Section = FMath::RandRange(0, 1);
+			switch (Section)
+			{
+			case 0:
+				AnimInstance->Montage_Play(CombatMontage, 2.2f);
+				AnimInstance->Montage_JumpToSection(FName("Attack_1"), CombatMontage);
+				break;
+			case 1:
+				AnimInstance->Montage_Play(CombatMontage, 1.8f);
+				AnimInstance->Montage_JumpToSection(FName("Attack_2"), CombatMontage);
+				break;
+			default:
+				;
+			}
+			
+		}
+	}
+}
+
+void AMain::AttackEnd()
+{
+	bAttacking = false;
+	if (bLMBDown)
+	{
+		Attack();
+	}
 }
 

@@ -128,4 +128,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items)
 	class AItem* ActiveOverlappingItem;
 	FORCEINLINE void SetActiveOverlappingItem(AItem* Item) { ActiveOverlappingItem = Item; }
+
+	/** Attack */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims")
+	bool bAttacking;
+	void Attack();
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
+	class UAnimMontage* CombatMontage;
 };
