@@ -9,7 +9,8 @@ public class FirstProject : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		// UMG : Unreal Motion Graphics (HUD를 만들기 위해서)
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG" });
+		// AIModule : AI
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "AIModule" });
 
 		// Slate UI (HUD 기초 시스템)
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
