@@ -118,6 +118,15 @@ public:
 	void DecrementHealth(float Amount);
 	void Die();
 	void IncreamentCoin(float Amount);
+	
+	/** 공격시 회전 */
+	float InterpSpeed;
+	bool bInterpToEnemy;
+	void SetInterptToEnemy(bool Interp);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	class AEnemy* CombatTarget;
+	FORCEINLINE void SetCombatTarget(AEnemy* Target) { CombatTarget = Target; }
+	FRotator GetLookAtRotationYaw(FVector Target);
 
 	/** Equipped Weapon */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)

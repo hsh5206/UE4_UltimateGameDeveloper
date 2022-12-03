@@ -10,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Weapon.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Enemy.h"
 
 // Sets default values
 AMain::AMain()
@@ -63,6 +65,9 @@ AMain::AMain()
 	MinSprintStamina = 50.f;
 
 	bLMBDown = false;
+	
+	InterpSpeed = 15.f;
+	bInterpToEnemy = false;
 }
 
 /** TArray(동전을 주운 장소)의 값을 드로우디버그로 표현 */
@@ -117,7 +122,6 @@ void AMain::Tick(float DeltaTime)
 
 	/** 스테미나 & 스프린트 상태 세팅 */
 	float DeltaStamina = StaminaDrainRate * DeltaTime;
-
 	switch (StaminaStatus)
 	{
 	case EStaminaStatus::ESS_Normal:
@@ -202,6 +206,15 @@ void AMain::Tick(float DeltaTime)
 		break;
 	default:
 		;
+	}
+
+	/** 적방향으로 방향 전환 */
+	if (bInterpToEnemy && CombatTarget)
+	{
+		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, InterpSpeed);
+
+		SetActorRotation(InterpRotation);
 	}
 }
 
@@ -310,6 +323,18 @@ void AMain::IncreamentCoin(float Amount)
 	Coins += Amount;
 }
 
+void AMain::SetInterptToEnemy(bool Interp)
+{
+	bInterpToEnemy = Interp;
+}
+
+FRotator AMain::GetLookAtRotationYaw(FVector Target)
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target);
+	FRotator LookAtRotationYaw(0.f, LookAtRotation.Yaw, 0.f);
+	return LookAtRotationYaw;
+}
+
 void AMain::SetEquippedWeapon(AWeapon* WeaponToSet)
 {
 	if (EquippedWeapon)
@@ -324,6 +349,8 @@ void AMain::Attack()
 	if (!bAttacking)
 	{
 		bAttacking = true;
+		SetInterptToEnemy(true);
+
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance && CombatMontage)
 		{
@@ -342,16 +369,13 @@ void AMain::Attack()
 				;
 			}
 		}
-		if (EquippedWeapon->SwingSound)
-		{
-			// UGameplayStatics::PlaySound2D(this, EquippedWeapon->SwingSound);
-		}
 	}
 }
 
 void AMain::AttackEnd()
 {
 	bAttacking = false;
+	SetInterptToEnemy(false);
 	if (bLMBDown)
 	{
 		Attack();
