@@ -313,9 +313,20 @@ void AMain::DecrementHealth(float Amount)
 	}
 }
 
+float AMain::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	DecrementHealth(DamageAmount);
+	return DamageAmount;
+}
+
 void AMain::Die()
 {
-
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && CombatMontage)
+	{
+		AnimInstance->Montage_Play(CombatMontage, 1.0f);
+		AnimInstance->Montage_JumpToSection(FName("Death"), CombatMontage);
+	}
 }
 
 void AMain::IncreamentCoin(float Amount)

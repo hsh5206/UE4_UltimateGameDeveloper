@@ -88,6 +88,10 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 			{
 				UGameplayStatics::PlaySound2D(this, Enemy->HitSound);
 			}
+			if (DamageTypeClass)
+			{
+				UGameplayStatics::ApplyDamage(Enemy, Damage, WeaponInstigator, this, DamageTypeClass);
+			}
 		}
 	}
 }
@@ -111,6 +115,9 @@ void AWeapon::Equip(AMain* Char)
 {
 	if (Char)
 	{
+		/** 컨트롤러 배당 */
+		SetInstigator(Char->GetController());
+
 		/** 콜리전, 피직스 설정 */
 		SkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore); // 카메라 줌 방지
 		SkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
