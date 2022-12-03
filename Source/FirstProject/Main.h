@@ -137,4 +137,12 @@ public:
 	void AttackEnd();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
 	class UAnimMontage* CombatMontage;
+
+	UFUNCTION(BlueprintCallable)
+	void PlaySwingSound();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class UParticleSystem* HitParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	class USoundCue* HitSound;
 };

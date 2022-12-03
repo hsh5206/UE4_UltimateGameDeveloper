@@ -36,11 +36,36 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound")
 	class USoundCue* OnEquipSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound")
+	class USoundCue* SwingSound;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SkeletalMesh")
 	class USkeletalMeshComponent* SkeletalMesh;
 
-	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	/** combat collision */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
+	class UBoxComponent* CombatCollision;
+
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
+
+	/** combat overlap */
+	UFUNCTION()
+	void CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void Equip(class AMain* Char);
+
+	/** Damage */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
+	float Damage;
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateCollision();
+	UFUNCTION(BlueprintCallable)
+	void DeActivateCollision();
+
+protected:
+	virtual void BeginPlay() override;
 };

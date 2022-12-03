@@ -7,6 +7,8 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 #include "Weapon.h"
 
 // Sets default values
@@ -339,7 +341,10 @@ void AMain::Attack()
 			default:
 				;
 			}
-			
+		}
+		if (EquippedWeapon->SwingSound)
+		{
+			// UGameplayStatics::PlaySound2D(this, EquippedWeapon->SwingSound);
 		}
 	}
 }
@@ -350,6 +355,14 @@ void AMain::AttackEnd()
 	if (bLMBDown)
 	{
 		Attack();
+	}
+}
+
+void AMain::PlaySwingSound()
+{
+	if (EquippedWeapon->SwingSound)
+	{
+		UGameplayStatics::PlaySound2D(this, EquippedWeapon->SwingSound);
 	}
 }
 
