@@ -110,4 +110,10 @@ public:
 	void Attack();
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
+
+	FTimerHandle AttackTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat");
+	float AttackMinTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat");
+	float AttackMaxTime;
 };
