@@ -107,6 +107,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DeActivateCollision();
 
+	bool bHasValidTarget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bAttacking;
 	void Attack();

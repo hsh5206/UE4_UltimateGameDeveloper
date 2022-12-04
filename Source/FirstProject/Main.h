@@ -11,6 +11,8 @@ enum class EMovementStatus : uint8
 {
 	EMS_Normal UMETA(DisplayName = "Normal"),
 	EMS_Sprinting UMETA(DisplayName = "Sprinting"),
+	EMS_Dead UMETA(DisplayName = "Dead"),
+
 	EMS_MAX UMETA(DisplayName = "DefaultMax")
 };
 
@@ -49,6 +51,8 @@ public:
 	float SprintingSpeed;
 
 	/** Sprinting */
+	bool bMovingForward;
+	bool bMovingRight;
 	bool bShiftKeyDown;
 	void ShiftKeyDown();
 	void ShiftKeyUp();
@@ -74,6 +78,9 @@ public:
 	float baseTurnRate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float baseLookUpRate;
+
+	/** Jump override */
+	virtual void Jump() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -119,6 +126,8 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	void Die();
 	void IncreamentCoin(float Amount);
+	UFUNCTION(BlueprintCallable)
+	void DeathEnd();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Controller")
 	class AMainPlayerController* MainPlayerController;

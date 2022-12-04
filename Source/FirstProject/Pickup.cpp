@@ -3,6 +3,8 @@
 
 #include "Pickup.h"
 #include "Main.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 APickup::APickup()
 {
@@ -13,13 +15,21 @@ void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 {
 	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
-	UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOvelapBegin()"));
+	// UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOvelapBegin()"));
 
 	if (OtherActor)
 	{
 		AMain* Main = Cast<AMain>(OtherActor);
 		if (Main)
 		{
+			if (OverlapParticles)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OverlapParticles, GetActorLocation(), FRotator(0.f), true);
+			}
+			if (OverlapSound)
+			{
+				UGameplayStatics::PlaySound2D(this, OverlapSound);
+			}
 			Main->IncreamentCoin(CoinCount);
 			Main->PickupLocations.Add(GetActorLocation());
 			Destroy();
@@ -31,5 +41,5 @@ void APickup::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 {
 	Super::OnOverlapEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 
-	UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOverlapEnd()"));
+	// UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOverlapEnd()"));
 }
