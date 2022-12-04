@@ -13,6 +13,10 @@ UCLASS()
 class FIRSTPROJECT_API AMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
@@ -21,7 +25,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	UUserWidget* HUDOverlay;
 
-protected:
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<UUserWidget> WEnemyHealthBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	UUserWidget* EnemyHealthBar;
+
+	bool bEnemyHealthBarVisible;
+	void DisplayEnemyHealthBar();
+	void RemoveEnemyHealthBar();
+
+	FVector EnemyLocation;
 };

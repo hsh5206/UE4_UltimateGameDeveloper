@@ -12,6 +12,7 @@
 #include "Weapon.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Enemy.h"
+#include "MainPlayerController.h"
 
 // Sets default values
 AMain::AMain()
@@ -68,6 +69,7 @@ AMain::AMain()
 	
 	InterpSpeed = 15.f;
 	bInterpToEnemy = false;
+	bHasCombatTarget = false;
 }
 
 /** TArray(동전을 주운 장소)의 값을 드로우디버그로 표현 */
@@ -113,6 +115,7 @@ void AMain::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MainPlayerController = Cast<AMainPlayerController>(GetController());
 }
 
 // Called every frame
@@ -215,6 +218,16 @@ void AMain::Tick(float DeltaTime)
 		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, InterpSpeed);
 
 		SetActorRotation(InterpRotation);
+	}
+
+	/** 적의 체력바를 띄울 위치 저장 */
+	if (CombatTarget)
+	{
+		CombatTargetLocation = CombatTarget->GetActorLocation();
+		if (MainPlayerController)
+		{
+			MainPlayerController->EnemyLocation = CombatTargetLocation;
+		}
 	}
 }
 
